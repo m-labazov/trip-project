@@ -1,0 +1,161 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>web-test</groupId>
+  <artifactId>web-test</artifactId>
+  <packaging>war</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>web-test Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  
+  <properties>
+  	<org.springframework.version>3.2.4.RELEASE</org.springframework.version>
+  </properties>
+  
+  <repositories>
+  	<repository>
+        <id>tomcat.release</id>
+        <name>Tomcat Release Central</name>
+        <url>http://tomcat.apache.org/dev/dist/m2-repository/org/apache/tomcat/</url>
+    </repository>
+  </repositories>
+  
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${org.springframework.version}</version>
+    </dependency>
+
+    <!--
+        Expression Language (depends on spring-core)
+        Define this if you use Spring Expression APIs (org.springframework.expression.*)
+    -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-expression</artifactId>
+        <version>${org.springframework.version}</version>
+    </dependency>
+
+    <!--
+        Bean Factory and JavaBeans utilities (depends on spring-core)
+        Define this if you use Spring Bean APIs (org.springframework.beans.*)
+    -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+        <version>${org.springframework.version}</version>
+    </dependency>
+
+    <!--
+        Aspect Oriented Programming (AOP) Framework (depends on spring-core, spring-beans)
+        Define this if you use Spring AOP APIs (org.springframework.aop.*)
+    -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-aop</artifactId>
+        <version>${org.springframework.version}</version>
+    </dependency>
+
+    <!--
+        Application Context (depends on spring-core, spring-expression, spring-aop, spring-beans)
+        This is the central artifact for Spring's Dependency Injection Container and is generally always defined
+    -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${org.springframework.version}</version>
+    </dependency>
+
+    <!--
+        Various Application Context utilities, including EhCache, JavaMail, Quartz, and Freemarker integration
+        Define this if you need any of these integrations
+    -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context-support</artifactId>
+        <version>${org.springframework.version}</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>${org.springframework.version}</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>${org.springframework.version}</version>
+    </dependency>
+    
+    <dependency>
+	   <groupId>com.fasterxml.jackson.core</groupId>
+	   <artifactId>jackson-core</artifactId>
+	   <version>2.1.0</version>
+	</dependency>
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-databind</artifactId>
+	    <version>2.1.0</version>
+	</dependency>
+
+  </dependencies>
+  <build>
+    <finalName>web-test</finalName>
+    <plugins>
+    	<plugin>
+    		<groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>2.1.1</version>
+            <configuration>
+                <warName>${project.war.name}</warName>
+                <outputDirectory>${project.war.directory}</outputDirectory>
+                <webResources>
+                    <!-- Public resources -->
+                    <!-- Private resources -->
+                    <resource>
+                            <directory>public</directory>
+                            <!--<excludes>-->
+                            <!--<exclude>closure-library/**/*.html</exclude>-->
+                            <!--</excludes>-->
+                            <includes>
+                                <include>crossdomain.xml</include>
+                                <include>**/*.jpg</include>
+                                <include>**/*.png</include>
+                                <include>**/*.gif</include>
+                                <include>**/*.css</include>
+                                <include>**/*.txt</include>
+                                <include>**/*.htm</include>
+                                <include>js/**/*.js</include>
+                                <include>**/*.swf</include>
+                            </includes>
+                        </resource>
+                </webResources>
+            </configuration>
+    	</plugin>
+    	<plugin>
+            <groupId>com.googlecode.t7mp</groupId>
+            <artifactId>maven-t7-plugin</artifactId>
+            <version>0.9.6</version>
+            <configuration>
+                <tomcatHttpPort>8080</tomcatHttpPort>
+                <tomcatShutdownPort>8005</tomcatShutdownPort>
+                <tomcatShutdownCommand>SHUTDOWN</tomcatShutdownCommand>
+                <tomcatVersion>7.0.6</tomcatVersion>
+                <tomcatSetAwait>true</tomcatSetAwait>
+                <tomcatConfigDirectory>${basedir}/config/tomcat/conf</tomcatConfigDirectory>
+                <lookInside>false</lookInside>
+            </configuration>
+        </plugin>
+    
+    </plugins>
+  </build>
+</project>
