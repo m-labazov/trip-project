@@ -1,14 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>web-test</groupId>
-  <artifactId>web-test</artifactId>
+  <groupId>home</groupId>
+  <artifactId>trip</artifactId>
   <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
-  <name>web-test Maven Webapp</name>
-  <url>http://maven.apache.org</url>
-  
-  <properties>
+
+<properties>
   	<org.springframework.version>3.2.4.RELEASE</org.springframework.version>
   </properties>
   
@@ -21,6 +19,11 @@
   </repositories>
   
   <dependencies>
+	<dependency>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-lang3</artifactId>
+		<version>3.0</version>
+	</dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -106,11 +109,24 @@
 	    <artifactId>jackson-databind</artifactId>
 	    <version>2.1.0</version>
 	</dependency>
+	<dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-mongodb</artifactId>
+        <version>1.3.3.RELEASE</version>
+    </dependency>
 
   </dependencies>
   <build>
-    <finalName>web-test</finalName>
+    <finalName>trip</finalName>
     <plugins>
+    	<plugin>
+	        <artifactId>maven-compiler-plugin</artifactId>
+	        <version>3.0</version>
+	        <configuration>
+	            <source>1.7</source>
+	            <target>1.7</target>
+	        </configuration>
+	    </plugin>
     	<plugin>
     		<groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
@@ -146,6 +162,8 @@
             <artifactId>maven-t7-plugin</artifactId>
             <version>0.9.6</version>
             <configuration>
+	            <source>1.7</source>
+		        <target>1.7</target>
                 <tomcatHttpPort>8080</tomcatHttpPort>
                 <tomcatShutdownPort>8005</tomcatShutdownPort>
                 <tomcatShutdownCommand>SHUTDOWN</tomcatShutdownCommand>

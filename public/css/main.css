@@ -1,0 +1,63 @@
+html { height: 100% }
+body { height: 100%; margin: 0; padding: 0 }
+#createLinkContainer {
+	visibility:hidden;
+}
+#links-layer{
+	position: absolute;  
+    top: 20px; 
+    margin:auto;
+    margin-left:600px;
+}
+#map-canvas{
+	height: 500px; 
+	width:500px;
+}
+.link-button {
+	float: right;
+	margin-left:10px;
+}
+.link-name, .link-name-header {
+	width:250px;
+	position:relative;
+	display:table-cell;
+}
+.link-type, .link-type-header {
+	position:relative;
+	margin-left:250px;
+	width:150px;
+	display:table-cell;
+}
+.link-url, .link-url-header {
+	position:relative;
+	margin-left:400px;
+	width : 50px;
+	display:table-cell;
+}
+.link-url-header, .link-type-header, .link-name-header {
+	background-color: #546679;	
+	border: 1px;
+}
+.link-name, .link-type, .link-url{
+	border: 1px;
+}
+.trip-link {
+	color: green;
+	text-decoration: underline;
+}
+.row-container, .links-table-header {
+	position:relative;
+	display:table-row;
+}
+.links-table {
+	display:table;
+}	
+.link-edit {
+	text-decoration: underline;
+	display:table-cell;
+}
+.link-delete {
+	text-decoration: underline;
+	display:table-cell;
+	padding-left: 10px;
+}
