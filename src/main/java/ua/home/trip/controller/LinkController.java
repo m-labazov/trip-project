@@ -1,7 +1,6 @@
 package ua.home.trip.controller;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import ua.home.trip.api.service.ITripService;
 import ua.home.trip.data.Link;
+import ua.home.trip.data.Marker;
 import ua.home.trip.enums.ELinkType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class LinkController extends BaseController {
@@ -24,13 +27,13 @@ public class LinkController extends BaseController {
 
 	@RequestMapping(value = "action/link/{tripId}", method = RequestMethod.PUT)
 	@ResponseBody
-	public String saveLink(@RequestBody Link link,
+    public JsonNode saveLink(@RequestBody Link link,
 			@PathVariable("tripId") String tripId) {
 		if (link.getName() == null) {
-			return "false";
+            return createFailResponse();
 		}
-		if (link.getUrl() == null) {
-			return "false";
+		if (link.getType() == null) {
+            return createFailResponse();
 		}
 
 		if (StringUtils.isBlank(link.getLinkId())) {
@@ -38,12 +41,12 @@ public class LinkController extends BaseController {
 		} else {
 			tripService.updateLink(tripId, link);
 		}
-		return createSuccessResponse(null);
+		return createSuccessResponse(link);
 	}
 
 	@RequestMapping(value = "action/link/types", method = RequestMethod.GET)
 	@ResponseBody
-	public String getLinkType() {
+    public JsonNode getLinkType() {
 		Map<String, String> values = new HashMap<>();
 		for (ELinkType type : ELinkType.values()) {
 			values.put(type.name(), type.getTitle());
@@ -51,12 +54,28 @@ public class LinkController extends BaseController {
 		return createSuccessResponse(values);
 	}
 
-	@RequestMapping(value = "action/link/{tripId}/{linkName}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "action/link/{tripId}/{linkId}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public String deleteLink(@PathVariable("tripId") String tripId,
-			@PathVariable("linkName") String linkName) {
+    public JsonNode deleteLink(@PathVariable("tripId") String tripId,
+ @PathVariable("linkId") String linkName) {
 		tripService.deleteLink(tripId, linkName);
-		return createSuccessResponse(null);
+		return createSuccessResponse();
+	}
+
+	@RequestMapping(value = "action/marker/{tripId}/{linkId}", method = RequestMethod.PUT)
+	@ResponseBody
+    public JsonNode addMarker(@PathVariable("tripId") String tripId,
+			@PathVariable("linkId") String linkId, @RequestBody Marker marker) {
+		tripService.addMarkerToLink(tripId, linkId, marker);
+		return createSuccessResponse();
+	}
+
+	@RequestMapping(value = "action/marker/{tripId}/{linkId}", method = RequestMethod.DELETE)
+	@ResponseBody
+    public JsonNode removeMarker(@PathVariable("tripId") String tripId,
+			@PathVariable("linkId") String linkId) {
+		tripService.addMarkerToLink(tripId, linkId, null);
+		return createSuccessResponse("Deleted");
 	}
 
 }

@@ -6,7 +6,8 @@ import java.util.List;
 
 public class Trip extends Identifier {
 
-	private List<Link> links = new ArrayList<>();
+	private ArrayList<Link> links = new ArrayList<>();
+    private List<Event> timeline = new ArrayList<>();
 	private Date startDate;
 	private Date endDate;
 	private String comment;
@@ -62,11 +63,11 @@ public class Trip extends Identifier {
 		this.name = name;
 	}
 
-	public List<Link> getLinks() {
+	public ArrayList<Link> getLinks() {
 		return links;
 	}
 
-	public void setLinks(List<Link> links) {
+	public void setLinks(ArrayList<Link> links) {
 		this.links = links;
 	}
 

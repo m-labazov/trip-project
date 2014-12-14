@@ -1,63 +1,68 @@
-html { height: 100% }
-body { height: 100%; margin: 0; padding: 0 }
-#createLinkContainer {
-	visibility:hidden;
+html {
+	height: 100%
 }
-#links-layer{
-	position: absolute;  
-    top: 20px; 
-    margin:auto;
-    margin-left:600px;
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0
 }
-#map-canvas{
-	height: 500px; 
-	width:500px;
+
+#main-layer {
+	position: relative;
+	margin: auto;
+	top: 20px;
+	width: 60%;
 }
-.link-button {
-	float: right;
-	margin-left:10px;
+
+#map-canvas {
+	height: 25%;
+	width: 25%;
 }
-.link-name, .link-name-header {
-	width:250px;
-	position:relative;
-	display:table-cell;
+
+.trip-start-date {
 }
-.link-type, .link-type-header {
-	position:relative;
-	margin-left:250px;
-	width:150px;
-	display:table-cell;
+
+label {
+	float: left;
 }
-.link-url, .link-url-header {
-	position:relative;
-	margin-left:400px;
-	width : 50px;
-	display:table-cell;
+
+.link-name,.link-name-header {
+	width: 250px;
+	position: relative;
+	display: table-cell;
 }
-.link-url-header, .link-type-header, .link-name-header {
-	background-color: #546679;	
+
+.add-button {
+	text-decoration: underline;
+	background-color: #546679;
 	border: 1px;
+	border-style: solid;
+	width: 100%;
 }
-.link-name, .link-type, .link-url{
-	border: 1px;
+.ok-button {
+	background-image: url('../images/icon_checked.png');
 }
-.trip-link {
-	color: green;
-	text-decoration: underline;
+.icon {
+	background-repeat: no-repeat;
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	padding: 0;
+    text-align: left;
+    text-indent: -999em;
 }
-.row-container, .links-table-header {
-	position:relative;
-	display:table-row;
+.cancel-button {
+	background-image: url('../images/close.png');
 }
-.links-table {
-	display:table;
-}	
-.link-edit {
-	text-decoration: underline;
-	display:table-cell;
+.field-value {
+	display: inline-block;
 }
-.link-delete {
-	text-decoration: underline;
-	display:table-cell;
-	padding-left: 10px;
+.edit-button {
+	float:right;
+	display:none;
+	background-image: url('../images/edit_20.png');
+}
+.trip-control {
+	display:inline-block;
 }

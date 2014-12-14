@@ -1,8 +1,8 @@
 package ua.home.trip.data;
 
-import java.util.Date;
-
 import ua.home.trip.enums.ELinkType;
+
+import java.util.Date;
 
 public class Link {
 
@@ -11,6 +11,7 @@ public class Link {
 	private ELinkType type;
 	private String url;
 	private String name;
+    private String description;
 	private Marker marker;
 	private Date createDate;
 	private String createUser;
@@ -70,5 +71,19 @@ public class Link {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
 }

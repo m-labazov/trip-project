@@ -12,7 +12,15 @@
 	<context:component-scan base-package="ua.home.trip.service" />
 	<context:component-scan base-package="ua.home.trip.repository" />
 	
-	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
+	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
+		<property name="dateFormat">
+			<bean class="java.text.SimpleDateFormat">
+				<constructor-arg index="0">
+					<value>dd-MM-yyyy</value>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
 	
 	<!-- Setting alwaysUseFullPath for Spring handler mapping and adapter to recognize URL by 
 		 prefix pattern (e.g. /somepath/*) -->

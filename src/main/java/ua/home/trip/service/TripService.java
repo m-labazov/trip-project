@@ -1,5 +1,6 @@
 package ua.home.trip.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 import ua.home.trip.api.repository.ITripRepository;
 import ua.home.trip.api.service.ITripService;
 import ua.home.trip.data.Link;
+import ua.home.trip.data.Marker;
 import ua.home.trip.data.Trip;
+import ua.home.trip.data.filter.Filter;
 
 @Service
 public class TripService implements ITripService {
@@ -26,8 +29,8 @@ public class TripService implements ITripService {
 	}
 
 	@Override
-	public Trip findTrip(String tripName) {
-		return tripRepository.getTrip(tripName);
+	public List<Link> findLinks(Filter filter) {
+		return tripRepository.getLinks(filter);
 	}
 
 	@Override
@@ -39,13 +42,33 @@ public class TripService implements ITripService {
 	}
 
 	@Override
-	public void deleteLink(String tripId, String linkName) {
-		tripRepository.deleteLink(tripId, linkName);
+	public void deleteLink(String tripId, String linkId) {
+		tripRepository.deleteLink(tripId, linkId);
 	}
 
 	@Override
 	public void updateLink(String tripId, Link link) {
 		tripRepository.updateLink(tripId, link);
+	}
+
+	@Override
+	public void addMarkerToLink(String tripId, String linkId, Marker marker) {
+		tripRepository.addMarkerToLink(tripId, linkId, marker);
+	}
+
+	@Override
+	public List<Trip> findTripList() {
+		return tripRepository.findTripList();
+	}
+
+	@Override
+	public void deleteTrip(String id) {
+		tripRepository.deleteTrip(id);
+	}
+
+	@Override
+	public void updateTrip(Trip trip) {
+		tripRepository.updateTrip(trip);
 	}
 
 }
