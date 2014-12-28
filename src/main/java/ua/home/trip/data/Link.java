@@ -13,6 +13,7 @@ public class Link {
 	private String name;
     private String description;
 	private Marker marker;
+    private String location;
 	private Date createDate;
 	private String createUser;
 
@@ -84,6 +85,20 @@ public class Link {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * @return the location
+     */
+    public String getLocation() {
+        return location;
+    }
+
+    /**
+     * @param location the location to set
+     */
+    public void setLocation(String location) {
+        this.location = location;
     }
 
 }

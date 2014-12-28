@@ -8,13 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ua.home.trip.api.service.ITripService;
-import ua.home.trip.data.Link;
 import ua.home.trip.data.Trip;
-import ua.home.trip.data.filter.Filter;
 
 import java.util.List;
 
@@ -31,35 +28,24 @@ public class TripController extends BaseController {
 		return createSuccessResponse();
 	}
 
-	@RequestMapping(value = "action/trip/{id}", method = RequestMethod.GET)
-	@ResponseBody
-    public JsonNode loadTrip(@PathVariable(value = "id") String id,
-			@RequestParam(value = "type", required = false) String type) {
-		Filter filter = new Filter();
-		filter.setId(id);
-		filter.setType(type);
-		List<Link> links = tripService.findLinks(filter);
-		return createSuccessResponse(links);
-	}
-
 	@RequestMapping(value = "action/trip/list", method = RequestMethod.GET)
 	@ResponseBody
     public JsonNode loadTrip() {
-		List<Trip> tripList = tripService.findTripList();
+        List<Trip> tripList = tripService.findList();
 		return createSuccessResponse(tripList);
 	}
 
 	@RequestMapping(value = "action/trip/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
     public JsonNode deleteTrip(@PathVariable String id) {
-		tripService.deleteTrip(id);
+        tripService.delete(id);
 		return createSuccessResponse();
 	}
 
 	@RequestMapping(value = "action/trip", method = RequestMethod.PUT)
 	@ResponseBody
     public JsonNode updateTrip(@RequestBody Trip trip) {
-		tripService.updateTrip(trip);
+        tripService.update(trip);
 		return createSuccessResponse();
 	}
 }

@@ -1,12 +1,11 @@
 package ua.home.trip.service;
 
-import java.util.List;
-import java.util.UUID;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import ua.home.trip.api.data.IUser;
 import ua.home.trip.api.repository.ITripRepository;
 import ua.home.trip.api.service.ITripService;
 import ua.home.trip.data.Link;
@@ -14,8 +13,11 @@ import ua.home.trip.data.Marker;
 import ua.home.trip.data.Trip;
 import ua.home.trip.data.filter.Filter;
 
+import java.util.List;
+import java.util.UUID;
+
 @Service
-public class TripService implements ITripService {
+public class TripService extends AbstractService<Trip, ITripRepository> implements ITripService {
 
 	@Autowired
 	private ITripRepository tripRepository;
@@ -34,14 +36,6 @@ public class TripService implements ITripService {
 	}
 
 	@Override
-	public void insert(Trip trip) {
-		if (StringUtils.isBlank(trip.getId())) {
-			trip.setId(UUID.randomUUID().toString());
-		}
-		tripRepository.insert(trip);
-	}
-
-	@Override
 	public void deleteLink(String tripId, String linkId) {
 		tripRepository.deleteLink(tripId, linkId);
 	}
@@ -56,19 +50,22 @@ public class TripService implements ITripService {
 		tripRepository.addMarkerToLink(tripId, linkId, marker);
 	}
 
-	@Override
-	public List<Trip> findTripList() {
-		return tripRepository.findTripList();
-	}
+    @Override
+    protected ITripRepository getRepository() {
+        return tripRepository;
+    }
 
-	@Override
-	public void deleteTrip(String id) {
-		tripRepository.deleteTrip(id);
-	}
+    @Override
+    public void insert(Trip entity) {
+        IUser user = (IUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        entity.setCreator(user.getId());
+        super.insert(entity);
+    }
 
-	@Override
-	public void updateTrip(Trip trip) {
-		tripRepository.updateTrip(trip);
-	}
+    @Override
+    public List<Trip> findList() {
+        IUser user = (IUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return getRepository().findList(user.getId());
+    }
 
 }

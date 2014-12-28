@@ -2,8 +2,6 @@ package ua.home.trip.repository;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -21,12 +19,9 @@ import java.util.Collections;
 import java.util.List;
 
 @Repository
-public class TripRepository implements ITripRepository {
+public class TripRepository extends AbstractRepository<Trip> implements ITripRepository {
 
     private static Logger LOGGER = Logger.getLogger(TripRepository.class);
-
-    @Autowired
-    private MongoTemplate template;
 
     @Override
     public void addLink(String tripId, Link link) {
@@ -39,7 +34,6 @@ public class TripRepository implements ITripRepository {
     public List<Link> getLinks(Filter filter) {
         Criteria idCriteria = Criteria.where("_id").is(filter.getId());
 
-        LOGGER.info("Start!");
         MatchOperation typeMatchOperation = null;
         if (StringUtils.isNotBlank(filter.getType())) {
             typeMatchOperation = Aggregation.match(Criteria.where("links.type").is(filter.getType()));
@@ -50,11 +44,6 @@ public class TripRepository implements ITripRepository {
                 Aggregation.unwind("links"), typeMatchOperation, Aggregation.group("id").push("links").as("links"));
         Trip result = template.aggregate(newAggregation, Trip.class, Trip.class).getUniqueMappedResult();
         return result != null ? result.getLinks() : Collections.EMPTY_LIST;
-    }
-
-    @Override
-    public void insert(Trip trip) {
-        template.insert(trip);
     }
 
     @Override
@@ -80,7 +69,7 @@ public class TripRepository implements ITripRepository {
                 .elemMatch(Criteria.where("linkId").is(link.getLinkId())));
 
         Update update = new Update().set("links.$.name", link.getName()).set("links.$.type", link.getType())
-                .set("links.$.url", link.getUrl());
+                .set("links.$.url", link.getUrl()).set("links.$.location", link.getLocation());
         template.updateFirst(query, update, Trip.class);
     }
 
@@ -94,20 +83,7 @@ public class TripRepository implements ITripRepository {
     }
 
     @Override
-    public List<Trip> findTripList() {
-        Query query = new Query();
-        query.fields().include("_id").include("name").include("startDate").include("endDate").include("comment");
-        return template.find(query, Trip.class);
-    }
-
-    @Override
-    public void deleteTrip(String id) {
-        Query query = Query.query(Criteria.where("id").is(id));
-        template.remove(query, Trip.class);
-    }
-
-    @Override
-    public void updateTrip(Trip trip) {
+    public void update(Trip trip) {
         Query query = Query.query(Criteria.where("id").is(trip.getId()));
         Update update = new Update();
         if (StringUtils.isNotBlank(trip.getName())) {
@@ -121,4 +97,12 @@ public class TripRepository implements ITripRepository {
         }
         template.updateFirst(query, update, Trip.class);
     }
+
+    @Override
+    public List<Trip> findList(String creator) {
+        Query query = new Query(Criteria.where("creator").is(creator));
+        query.fields().include("_id").include("name").include("startDate").include("endDate").include("comment");
+        return template.find(query, Trip.class);
+    }
+
 }

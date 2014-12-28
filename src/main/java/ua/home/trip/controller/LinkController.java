@@ -9,21 +9,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ua.home.trip.api.service.ITripService;
+import ua.home.trip.api.service.ILinkService;
 import ua.home.trip.data.Link;
 import ua.home.trip.data.Marker;
+import ua.home.trip.data.filter.Filter;
 import ua.home.trip.enums.ELinkType;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
 public class LinkController extends BaseController {
 
 	@Autowired
-	private ITripService tripService;
+    private ILinkService linkService;
 
 	@RequestMapping(value = "action/link/{tripId}", method = RequestMethod.PUT)
 	@ResponseBody
@@ -37,9 +40,9 @@ public class LinkController extends BaseController {
 		}
 
 		if (StringUtils.isBlank(link.getLinkId())) {
-			tripService.addLink(tripId, link);
+            linkService.addLink(tripId, link);
 		} else {
-			tripService.updateLink(tripId, link);
+            linkService.updateLink(tripId, link);
 		}
 		return createSuccessResponse(link);
 	}
@@ -58,7 +61,7 @@ public class LinkController extends BaseController {
 	@ResponseBody
     public JsonNode deleteLink(@PathVariable("tripId") String tripId,
  @PathVariable("linkId") String linkName) {
-		tripService.deleteLink(tripId, linkName);
+        linkService.deleteLink(tripId, linkName);
 		return createSuccessResponse();
 	}
 
@@ -66,7 +69,7 @@ public class LinkController extends BaseController {
 	@ResponseBody
     public JsonNode addMarker(@PathVariable("tripId") String tripId,
 			@PathVariable("linkId") String linkId, @RequestBody Marker marker) {
-		tripService.addMarkerToLink(tripId, linkId, marker);
+        linkService.addMarkerToLink(tripId, linkId, marker);
 		return createSuccessResponse();
 	}
 
@@ -74,8 +77,19 @@ public class LinkController extends BaseController {
 	@ResponseBody
     public JsonNode removeMarker(@PathVariable("tripId") String tripId,
 			@PathVariable("linkId") String linkId) {
-		tripService.addMarkerToLink(tripId, linkId, null);
+        linkService.addMarkerToLink(tripId, linkId, null);
 		return createSuccessResponse("Deleted");
 	}
+
+    @RequestMapping(value = "action/link/{tripId}", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonNode loadTrip(@PathVariable(value = "tripId") String id,
+            @RequestParam(value = "type", required = false) String type) {
+        Filter filter = new Filter();
+        filter.setId(id);
+        filter.setType(type);
+        List<Link> links = linkService.findLinks(filter);
+        return createSuccessResponse(links);
+    }
 
 }

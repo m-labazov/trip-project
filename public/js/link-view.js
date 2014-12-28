@@ -11,6 +11,8 @@ function LinkService() {
 	};
 	this.saveLink = function(row) {
 		var json = createObjectFromRow(row);
+		delete json.startTime;
+		delete json.endTime;
 		var jsonData = JSON.stringify(json);
 		$.ajax({
 			url : "action/link/" + linksTab.trip.id,
@@ -31,14 +33,26 @@ function LinksTab() {
 		"columns": [
 		            { "data": "linkId" },
 		            { "data": "name" },
+		            { "data": "location" },
 		            { "data": "type" },
+		            { "data": "url" },
 		            ],
         "columnDefs": [
-                       {
-                    	   "targets" : [ 0 ],
-                    	   "visible" : false,
-                    	   "searchable" : false
-                       } ]
+ 					{
+						"render" : function(data, type, row) {
+							return "<a href='" + row.url + "'>Link</a>";
+						},
+						"targets" : 4
+					}, {
+						"render" : function(data, type, row) {
+							return linkTypes[row.type];
+						},
+						"targets" : 3
+					}, {
+						"targets" : [ 0 ],
+						"visible" : false,
+						"searchable" : false
+					} ]
 	} );
 	$('#linkTable tbody').on( 'click', 'tr[role="row"]', function () {
 		var tr = $(this).closest('tr');
@@ -46,12 +60,10 @@ function LinksTab() {
 		var link = row.data();
  
         if ( row.child.isShown() ) {
-            // This row is already open - close it
             row.child.hide();
             tr.removeClass('shown');
         }
         else {
-            // Open this row
             row.child( getLinkDetails(link) ).show();
             tr.addClass('shown');
         }
@@ -69,16 +81,12 @@ function LinksTab() {
 		$('#links-layer').hide();
 	}
 	this.repaintLinksTable = function() {
-		this.table.ajax.url("action/trip/" + this.trip.id).load();
+		this.table.ajax.url("action/link/" + this.trip.id).load();
 	}
 	this.filterLinkTypes = $('#filterLinkType');
 	this.addLinkButton = $('#addLinkButton');
 	this.addLinkButton.click(function() {
 		viewResolver.moveTo(new CreateLinkTab());
-	});
-	this.backToTripsButton = $('#backToTripsButton');
-	this.backToTripsButton.click(function() {
-		viewResolver.goBack();
 	});
 	$("#link-submit").click(function(){
 	    if($("#linkForm")[0].checkValidity()) {
@@ -99,7 +107,10 @@ function LinksTab() {
 		serviceContext.linkService.deleteLink($(this).parent().find("#linkId").text());
 	});
 	$("#linkEdit").click(function() {
-		viewResolver.moveTo(new CreateLinkTab(linksTab.table.row($('#linkTable').find('.shown')).data()));
+		viewResolver.moveTo(new CreateLinkTab(linksTab.table.row($(this).closest('tr').prev()).data()));
+	});
+	$("#linkAddToTimeline").click(function() {
+		viewResolver.moveTo(new CreateEventTab(linksTab.table.row($(this).closest('tr').prev()).data()));
 	});
 }
 
@@ -110,6 +121,8 @@ function CreateLinkTab(link) {
 			applyObjectToRow(link, $("#link-create-layer"));
 		}
 		$('#link-create-layer').show();
+		$('#link-submit').show();
+		$('.eventField').hide();
 	}
 	this.hide = function() {
 		$("#link-create-layer").hide();

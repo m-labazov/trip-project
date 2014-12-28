@@ -1,19 +1,17 @@
 package ua.home.trip.api.repository;
 
-import java.util.List;
-
 import ua.home.trip.data.Link;
 import ua.home.trip.data.Marker;
 import ua.home.trip.data.Trip;
 import ua.home.trip.data.filter.Filter;
 
-public interface ITripRepository {
+import java.util.List;
+
+public interface ITripRepository extends IAbstractRepository<Trip> {
 
 	void addLink(String tripId, Link link);
 
 	List<Link> getLinks(Filter filter);
-
-	void insert(Trip trip);
 
 	void deleteLink(String tripId, String linkName);
 
@@ -21,10 +19,6 @@ public interface ITripRepository {
 
 	void addMarkerToLink(String tripId, String linkId, Marker marker);
 
-	List<Trip> findTripList();
-
-	void deleteTrip(String id);
-
-	void updateTrip(Trip trip);
+    List<Trip> findList(String creator);
 
 }

@@ -66,3 +66,58 @@ label {
 .trip-control {
 	display:inline-block;
 }
+.menu-layer {
+	position:fixed;
+	left:13%;	
+	height:100%;
+}
+.menu {
+	position:absolute;
+	display: none;
+	border: 1px solid black;
+ 	background-color: #cccccc;
+ 	margin: 5px;
+ 	z-index: 1000;
+ 	padding: 5px;
+}
+.trip-timeline {
+	display: none;
+}
+.time-column {
+	width: 15%;
+	height: 100%;
+	border: 1px solid black;
+	display: table-cell;
+}
+.event-information {
+	width: 85%;
+	height: 100%;
+	border: 1px solid black;
+	display: table-cell;
+}
+.event-row {
+	width: 100%;
+	display: table-row-group;
+	visibility: hidden;
+}
+.event-name {
+	display:inline-block;
+}
+.event-type {
+	display:block;
+}
+.event-link {
+	display:block;
+	float:right;
+}
+.event-location {
+	display:block;
+	padding-bottom: 10px;
+}
+.timeline-table {
+	display: table;
+	width: 100%;
+}
+.menu-optional-fields {
+	display:none;
+}

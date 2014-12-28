@@ -33,6 +33,7 @@ function TripsTab() {
 			  var trip = tripsTab.table.row( this ).data();
 			  linksTab.trip = trip;
 			  viewResolver.moveTo(linksTab);
+			  menuTab.reloadFields();
 		} );
 	};
 	this.initTripsTable();
