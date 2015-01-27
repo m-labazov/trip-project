@@ -17,7 +17,7 @@ public class Trip extends Identifier {
 	private String comment;
 	private String name;
     private String creator;
-    private List<String> members;
+    private List<String> members = new ArrayList<>();
 
 	public Date getStartDate() {
 		return startDate;

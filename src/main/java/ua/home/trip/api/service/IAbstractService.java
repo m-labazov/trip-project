@@ -9,4 +9,6 @@ public interface IAbstractService<T> {
 
     void delete(String id);
 
+	T loadById(String id);
+
 }

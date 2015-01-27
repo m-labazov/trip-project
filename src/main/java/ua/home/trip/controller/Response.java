@@ -4,6 +4,7 @@ public class Response {
 
 	private String statusCode;
     private Object data;
+	private String httpStatus;
 
 	public Object getData() {
         return data;
@@ -19,6 +20,15 @@ public class Response {
 
 	public void setStatusCode(String statusCode) {
 		this.statusCode = statusCode;
+	}
+
+	public void setHttpStatus(String httpStatus) {
+		this.httpStatus = httpStatus;
+
+	}
+
+	public String getHttpStatus() {
+		return httpStatus;
 	}
 
 }

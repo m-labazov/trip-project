@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import ua.home.trip.api.repository.IAbstractRepository;
-import ua.home.trip.data.Trip;
 
 public abstract class AbstractRepository<T> implements IAbstractRepository<T> {
 
@@ -21,7 +20,15 @@ public abstract class AbstractRepository<T> implements IAbstractRepository<T> {
     @Override
     public void delete(String id) {
         Query query = Query.query(Criteria.where("id").is(id));
-        template.remove(query, Trip.class);
+		template.remove(query, getEntityClass());
     }
+
+	@Override
+	public T loadById(String id) {
+		Query query = Query.query(Criteria.where("id").is(id));
+		return template.findOne(query, getEntityClass());
+	}
+
+	public abstract Class<T> getEntityClass();
 
 }

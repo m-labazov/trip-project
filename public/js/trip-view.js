@@ -2,11 +2,16 @@ function TripsTab() {
 	this.addTripButton = $("#addTripButton"); 
 	this.paint = function() {
 		serviceContext.tripService.loadTripsTable(tripsTab);
+		history.pushState({}, 'Title', '');
 		$("#trip-layer").show();
 	}
 	this.hide = function() {
 		$("#trip-layer").hide();
-	}
+	};
+	this.back = function() {
+		window.history.back();
+		this.hide();
+	};
 	this.addTripButton.click(function() {
 		viewResolver.moveTo(new CreateTripTab());
 	});
@@ -33,7 +38,6 @@ function TripsTab() {
 			  var trip = tripsTab.table.row( this ).data();
 			  linksTab.trip = trip;
 			  viewResolver.moveTo(linksTab);
-			  menuTab.reloadFields();
 		} );
 	};
 	this.initTripsTable();
@@ -52,7 +56,11 @@ function CreateTripTab(trip) {
 		$("#trip-create-layer").hide();
 		$("#trip-submit").off();
 		$("#trip-cancel-submit").off();
-	}
+	};
+	this.back = function() {
+		this.hide();
+	};
+
 	$("#trip-submit").click(function(){
 		if($("#tripForm")[0].checkValidity()) {
 			serviceContext.tripService.saveTripRow($("#tripForm"), trip ? "put" : "post");
@@ -68,6 +76,16 @@ function TripService() {
 		tripsTab.table.clear();
 		tripsTab.table.ajax.reload();
 	};
+	this.loadTrip = function(id, displayFunction) {
+		$.ajax({
+			url : "action/trip/" + id,
+			type : "GET",
+			contentType : 'application/json',
+			success : function(data) {
+				displayFunction(getResponseBody(data));
+			}
+		});
+	};
 	this.saveTripRow = function(row, method) {
 		$.ajax({
 			url : "action/trip",
@@ -75,7 +93,11 @@ function TripService() {
 			type : method,
 			contentType : 'application/json',
 			success : function(data) {
-				viewResolver.goBack();
+				if (data.httpStatus === '400') {
+					showErrors(data.data, $("#tripForm"));
+				} else {
+					viewResolver.goBack();
+				}
 			}
 		});
 	};
@@ -87,5 +109,24 @@ function TripService() {
 				viewResolver.goBack();
 			}
 		});
-	}
+	};
+	this.loadTripMembers = function(id) {
+		$.ajax({
+			url : "action/trip/" + id + "/members",
+			type : 'get',
+			success : function(data) {
+				linksTab.drawMembers(getResponseBody(data));
+			}
+		});
+	};
+	this.addTripMember = function(id, member) {
+		$.ajax({
+			url : "action/trip/" + id + "/member/" + member.id,
+			type : 'put',
+			success : function(data) {
+				serviceContext.tripService.loadTripMembers(id);
+			    viewResolver.goBack();
+			}
+		});
+	};
 }

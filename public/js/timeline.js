@@ -6,6 +6,9 @@ function TimelineTab() {
 	this.hide = function() {
 		$("#trip-timeline").hide();
 	};
+	this.back = function() {
+		this.hide();
+	};
 	$("#event-submit").click(function(){
 	    if($("#linkForm")[0].checkValidity()) {
 	        serviceContext.eventService.saveEvent($("#linkForm"));

@@ -32,7 +32,10 @@ label {
 	position: relative;
 	display: table-cell;
 }
-
+.button {
+	text-decoration: underline;
+	cursor: pointer;
+}
 .add-button {
 	text-decoration: underline;
 	background-color: #546679;
@@ -42,6 +45,9 @@ label {
 }
 .ok-button {
 	background-image: url('../images/icon_checked.png');
+}
+.dataTable td {
+	text-align: center;
 }
 .icon {
 	background-repeat: no-repeat;

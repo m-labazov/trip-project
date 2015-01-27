@@ -21,7 +21,7 @@ function createObjectFromRow(row) {
 }
 
 function addValueToResult(row, result) {
-	if (row.is(":visible") || row.css('display') !== 'none') {
+	if (row.is(":visible") || row.css('display') !== 'none' || row.attr('type') === 'hidden') {
 		result[row.attr('id')] = row.val();
 	}
 }
@@ -54,4 +54,11 @@ function clearForm(form) {
 	form.find('div textarea').each(function() {
 		$(this).val("");
 	});
+}
+
+function showErrors(errors, form) {
+	for(field in errors) {
+		form.find( "#" + field )[0].setCustomValidity(errors[field]);
+		
+	}
 }

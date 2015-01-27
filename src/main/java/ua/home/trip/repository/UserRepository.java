@@ -1,5 +1,13 @@
 package ua.home.trip.repository;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -7,87 +15,98 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionKey;
 import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.connect.ConnectionSignUp;
+import org.springframework.social.connect.UserProfile;
 import org.springframework.social.connect.UsersConnectionRepository;
+import org.springframework.social.connect.mem.InMemoryUsersConnectionRepository;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.PagedList;
+import org.springframework.social.facebook.api.Reference;
+import org.springframework.stereotype.Repository;
 
 import ua.home.trip.api.data.IUser;
 import ua.home.trip.api.service.IUserRepository;
 import ua.home.trip.data.User;
 import ua.home.trip.util.UserFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+@Repository
+public class UserRepository implements IUserRepository, ConnectionSignUp, InitializingBean {
 
-public class UserRepository implements UsersConnectionRepository, IUserRepository {
+	@Autowired
+	private MongoTemplate template;
+	@Resource(name = "usersConnectionRepository")
+	private UsersConnectionRepository userConnectionRepository;
 
-    @Autowired
-    private MongoTemplate template;
+	@Override
+	public IUser loadUserByUsername(String userName) {
+		return loadUserById(userName);
+	}
 
-    @Override
-    public List<String> findUserIdsWithConnection(Connection<?> connection) {
-        ConnectionKey key = connection.getKey();
-        List<IUser> userSocialConnectionList = findByProviderIdAndProviderUserId(key.getProviderId(),
-                key.getProviderUserId());
-        List<String> localUserIds = new ArrayList<String>();
-        for (IUser userSocialConnection : userSocialConnectionList) {
-            localUserIds.add(userSocialConnection.getUserId());
-        }
-        if (localUserIds.size() == 0) {
-            localUserIds.add(signUpUser(connection));
-        }
-        return localUserIds;
-    }
+	@Override
+	public IUser loadUserById(String userId) {
+		Query query = new Query(Criteria.where("id").is(userId));
+		return template.findOne(query, User.class);
+	}
 
-    private String signUpUser(Connection<?> connection) {
-        IUser createUser = UserFactory.createUser(connection.fetchUserProfile(), connection.getKey());
-        template.insert(createUser);
-        return createUser.getId();
+	@Override
+	public List<IUser> loadContactList(String userId) {
+		IUser loadUserById = loadUserById(userId);
+		ConnectionRepository connectionRepository = userConnectionRepository.createConnectionRepository(userId);
+		List<IUser> result = new ArrayList<>();
+		Set<Connection<?>> connections = new HashSet<Connection<?>>(connectionRepository.findConnections(loadUserById
+				.getProviderId()));
+		for (Connection<?> connection : connections) {
+			result.addAll(getFriendUsers((Facebook) connection.getApi()));
+		}
+		return result;
+	}
 
-    }
+	private List<IUser> getFriendUsers(Facebook api) {
+		List<IUser> result = new ArrayList<>();
+		PagedList<Reference> friends = api.friendOperations().getFriends();
+		for (Reference reference : friends) {
+			result.add(loadUserBySocialId("facebook", reference.getId()));
+		}
+		return result;
+	}
 
-    private List<IUser> findByProviderIdAndProviderUserId(String providerId, String providerUserId) {
-        Query query = new Query(Criteria.where("providerId").is(providerId)
-                .andOperator(Criteria.where("providerUserId").is(providerUserId)));
-        List<IUser> result = new LinkedList<IUser>();
-        for (User user : template.find(query, User.class)) {
-            result.add(user);
-        }
-        return result;
-    }
+	@Override
+	public List<IUser> loadUsersByIds(List<String> members) {
+		Query query = Query.query(Criteria.where("id").in(members));
+		List<User> users = template.find(query, User.class);
+		List<IUser> result = new ArrayList<>();
+		users.forEach(user -> result.add(user));
+		return result;
+	}
 
-    public Set<String> findUserIdsConnectedTo(String providerId, Set<String> providerUserIds) {
-        final Set<String> localUserIds = new HashSet<String>();
-        List<IUser> userSocialConnectionList = findByProviderIdAndProviderUserIdIn(providerId, providerUserIds);
-        for (IUser userSocialConnection : userSocialConnectionList) {
-            localUserIds.add(userSocialConnection.getUserId());
-        }
-        return localUserIds;
-    }
+	@Override
+	public IUser loadUserBySocialId(String providerId, String socialUserId) {
+		Set<String> providerUserIds = new HashSet<>();
+		providerUserIds.add(socialUserId);
+		// TODO uncomment when connection persisting is implemented
+		// Set<String> userId =
+		// userConnectionRepository.findUserIdsConnectedTo(providerId,
+		// providerUserIds);
+		// Query query = Query.query(Criteria.where("id").is(userId));
+		Query query = Query.query(Criteria.where("providerUserId").is(socialUserId));
+		return template.findOne(query, User.class);
+	}
 
-    private List<IUser> findByProviderIdAndProviderUserIdIn(String providerId, Set<String> providerUserIds) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public String execute(Connection<?> connection) {
+		UserProfile userProfile = connection.fetchUserProfile();
+		ConnectionKey key = connection.getKey();
+		IUser user = loadUserBySocialId(key.getProviderId(), connection.getKey().getProviderUserId());
+		if (user == null) {
+			user = UserFactory.createUser(userProfile, connection.getKey());
+			template.insert(user);
+		}
+		return user.getId();
+	}
 
-    @Override
-    public ConnectionRepository createConnectionRepository(String userId) {
-        if (userId == null) {
-            throw new IllegalArgumentException("userId cannot be null");
-        }
-        return new ConnectionRepositoryImpl(userId, template);
-    }
-
-    @Override
-    public IUser loadUserByUsername(String userName) {
-        return loadUserById(userName);
-    }
-
-    @Override
-    public IUser loadUserById(String userId) {
-        Query query = new Query(Criteria.where("email").is(userId));
-        return template.findOne(query, User.class);
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		((InMemoryUsersConnectionRepository) userConnectionRepository).setConnectionSignUp(this);
+	}
 
 }

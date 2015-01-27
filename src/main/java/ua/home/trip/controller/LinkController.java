@@ -1,6 +1,8 @@
 package ua.home.trip.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,9 @@ import ua.home.trip.data.Link;
 import ua.home.trip.data.Marker;
 import ua.home.trip.data.filter.Filter;
 import ua.home.trip.enums.ELinkType;
+import ua.home.trip.util.LinkValidator;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Controller
 public class LinkController extends BaseController {
@@ -28,17 +29,14 @@ public class LinkController extends BaseController {
 	@Autowired
     private ILinkService linkService;
 
-	@RequestMapping(value = "action/link/{tripId}", method = RequestMethod.PUT)
+	@RequestMapping(value = "link/{tripId}", method = RequestMethod.PUT)
 	@ResponseBody
     public JsonNode saveLink(@RequestBody Link link,
 			@PathVariable("tripId") String tripId) {
-		if (link.getName() == null) {
-            return createFailResponse();
+		Map<String, String> errors = LinkValidator.validate(link, tripId);
+		if (!errors.isEmpty()) {
+			return createFailResponse(errors);
 		}
-		if (link.getType() == null) {
-            return createFailResponse();
-		}
-
 		if (StringUtils.isBlank(link.getLinkId())) {
             linkService.addLink(tripId, link);
 		} else {
@@ -47,7 +45,7 @@ public class LinkController extends BaseController {
 		return createSuccessResponse(link);
 	}
 
-	@RequestMapping(value = "action/link/types", method = RequestMethod.GET)
+	@RequestMapping(value = "link/types", method = RequestMethod.GET)
 	@ResponseBody
     public JsonNode getLinkType() {
 		Map<String, String> values = new HashMap<>();
@@ -57,15 +55,14 @@ public class LinkController extends BaseController {
 		return createSuccessResponse(values);
 	}
 
-    @RequestMapping(value = "action/link/{tripId}/{linkId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "link/{tripId}/{linkId}", method = RequestMethod.DELETE)
 	@ResponseBody
-    public JsonNode deleteLink(@PathVariable("tripId") String tripId,
- @PathVariable("linkId") String linkName) {
+	public JsonNode deleteLink(@PathVariable("tripId") String tripId, @PathVariable("linkId") String linkName) {
         linkService.deleteLink(tripId, linkName);
 		return createSuccessResponse();
 	}
 
-	@RequestMapping(value = "action/marker/{tripId}/{linkId}", method = RequestMethod.PUT)
+	@RequestMapping(value = "marker/{tripId}/{linkId}", method = RequestMethod.PUT)
 	@ResponseBody
     public JsonNode addMarker(@PathVariable("tripId") String tripId,
 			@PathVariable("linkId") String linkId, @RequestBody Marker marker) {
@@ -73,7 +70,7 @@ public class LinkController extends BaseController {
 		return createSuccessResponse();
 	}
 
-	@RequestMapping(value = "action/marker/{tripId}/{linkId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "marker/{tripId}/{linkId}", method = RequestMethod.DELETE)
 	@ResponseBody
     public JsonNode removeMarker(@PathVariable("tripId") String tripId,
 			@PathVariable("linkId") String linkId) {
@@ -81,7 +78,7 @@ public class LinkController extends BaseController {
 		return createSuccessResponse("Deleted");
 	}
 
-    @RequestMapping(value = "action/link/{tripId}", method = RequestMethod.GET)
+	@RequestMapping(value = "link/{tripId}", method = RequestMethod.GET)
     @ResponseBody
     public JsonNode loadTrip(@PathVariable(value = "tripId") String id,
             @RequestParam(value = "type", required = false) String type) {

@@ -1,9 +1,12 @@
 package ua.home.trip.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BaseController {
 
@@ -21,9 +24,19 @@ public class BaseController {
         return mapper.valueToTree(response);
 	}
 
-    protected JsonNode createFailResponse() {
-        Response response = new Response();
+	protected JsonNode createFailResponse() {
+		return createFailResponse(null);
+	}
+
+	protected JsonNode createFailResponse(Map<String, String> errors) {
+		return createFailResponse(errors, HttpStatus.BAD_REQUEST);
+	}
+
+	protected JsonNode createFailResponse(Map<String, String> errors, HttpStatus badRequest) {
+		Response response = new Response();
         response.setStatusCode("FAIL");
+		response.setData(errors);
+		response.setHttpStatus(badRequest.toString());
         return mapper.valueToTree(response);
-    }
+	}
 }

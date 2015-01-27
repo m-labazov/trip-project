@@ -20,8 +20,12 @@ function LinkService() {
 			type : 'put',
 			contentType : 'application/json',
 			success : function(data) {
-				getResponseBody(data);
-				linksTab.repaintLinksTable();
+				if (data.httpStatus === '400') {
+					showErrors(data.data, $("#linkForm"));
+				} else {
+					linksTab.repaintLinksTable();
+					viewResolver.goBack();
+				}
 			}
 		});
 	};
@@ -76,10 +80,17 @@ function LinksTab() {
 		$("#tripDescription").empty();
 		$("#tripLabel").append(linksTab.trip.name + " (from " + linksTab.trip.startDate + " to " + linksTab.trip.endDate + ")");
 		$("#tripDescription").append(linksTab.trip.comment);
+		history.pushState({}, 'Title', 'trip?id='+linksTab.trip.id);
+		menuTab.reloadFields();
+		serviceContext.tripService.loadTripMembers(linksTab.trip.id);
+	};
+	this.back = function() {
+		window.history.back();
+		this.hide();
 	};
 	this.hide = function() {
 		$('#links-layer').hide();
-	}
+	};
 	this.repaintLinksTable = function() {
 		this.table.ajax.url("action/link/" + this.trip.id).load();
 	}
@@ -91,10 +102,12 @@ function LinksTab() {
 	$("#link-submit").click(function(){
 	    if($("#linkForm")[0].checkValidity()) {
 	        serviceContext.linkService.saveLink($("#linkForm"));
-	        viewResolver.goBack();
 	    }else console.log("invalid form");
 	});
 	$("#link-cancel-submit").click(function(){
+		viewResolver.goBack();
+	});
+	$("#add-member-cancel-submit").click(function(){
 		viewResolver.goBack();
 	});
 	$("#tripDelete").click(function() {
@@ -102,6 +115,10 @@ function LinksTab() {
 	});
 	$("#tripEdit").click(function() {
 		viewResolver.moveTo(new CreateTripTab(linksTab.trip));
+	});
+	$("#tripAddMember").click(function() {
+		membersTab.trip = linksTab.trip;
+		viewResolver.moveTo(membersTab);
 	});
 	$("#linkDelete").click(function() {
 		serviceContext.linkService.deleteLink($(this).parent().find("#linkId").text());
@@ -112,6 +129,11 @@ function LinksTab() {
 	$("#linkAddToTimeline").click(function() {
 		viewResolver.moveTo(new CreateEventTab(linksTab.table.row($(this).closest('tr').prev()).data()));
 	});
+	this.drawMembers = function(members) {
+		var membersContainer = $("#tripMembers");
+		membersContainer.empty();
+		membersContainer.append(members.toString());
+	};
 }
 
 function CreateLinkTab(link) {
@@ -126,6 +148,42 @@ function CreateLinkTab(link) {
 	}
 	this.hide = function() {
 		$("#link-create-layer").hide();
+	}
+	this.back = function() {
+		this.hide();
+	};
+
+}
+
+function MemberTab(trip) {
+	$('#friendTable').dataTable( {
+		"processing": true,
+		"columns": [
+		            { "data": "id" },
+		            { "data": "name" }
+		            ],
+        "columnDefs": [
+ 					 {
+				"targets" : [ 0 ],
+				"visible" : false,
+				"searchable" : false
+			} ]
+	} );
+	this.table = $('#friendTable').DataTable();
+	$('#friendTable tbody').on( 'click', 'tr', function () {
+		  var member = membersTab.table.row( this ).data();
+		  serviceContext.tripService.addTripMember(membersTab.trip.id, member);
+	} );
+	this.paint = function() {
+		membersTab.table.ajax.url("action/loadNewMembersList/" + membersTab.trip.id).load();
+		$('#add-member-layer').show();
+	};
+	this.back = function() {
+		this.hide();
+	};
+
+	this.hide = function() {
+		$("#add-member-layer").hide();
 	}
 }
 

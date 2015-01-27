@@ -1,12 +1,12 @@
 package ua.home.trip.service;
 
+import java.util.UUID;
+
 import org.apache.commons.lang3.StringUtils;
 
 import ua.home.trip.api.repository.IAbstractRepository;
 import ua.home.trip.api.service.IAbstractService;
 import ua.home.trip.data.Identifier;
-
-import java.util.UUID;
 
 public abstract class AbstractService<T extends Identifier, R extends IAbstractRepository<T>> implements
         IAbstractService<T> {
@@ -30,4 +30,9 @@ public abstract class AbstractService<T extends Identifier, R extends IAbstractR
     public void update(T entity) {
         getRepository().update(entity);
     }
+
+	@Override
+	public T loadById(String id) {
+		return getRepository().loadById(id);
+	}
 }

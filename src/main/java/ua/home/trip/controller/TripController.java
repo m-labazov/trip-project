@@ -1,6 +1,7 @@
 package ua.home.trip.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,8 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import ua.home.trip.api.service.ITripService;
 import ua.home.trip.data.Trip;
+import ua.home.trip.util.TripValidator;
 
-import java.util.List;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Controller
 public class TripController extends BaseController {
@@ -21,31 +23,62 @@ public class TripController extends BaseController {
 	@Autowired
 	private ITripService tripService;
 
-	@RequestMapping(value = "action/trip", method = RequestMethod.POST)
+	@RequestMapping(value = "trip", method = RequestMethod.POST)
 	@ResponseBody
-    public JsonNode saveTrip(@RequestBody Trip trip) {
-		tripService.insert(trip);
-		return createSuccessResponse();
+	public JsonNode saveTrip(@RequestBody Trip trip) {
+		Map<String, String> errors = TripValidator.validate(trip);
+		if (errors.isEmpty()) {
+			tripService.insert(trip);
+			return createSuccessResponse();
+		} else {
+			return createFailResponse(errors);
+		}
 	}
 
-	@RequestMapping(value = "action/trip/list", method = RequestMethod.GET)
+	@RequestMapping(value = "trip/list", method = RequestMethod.GET)
 	@ResponseBody
-    public JsonNode loadTrip() {
+	public JsonNode loadTripList() {
         List<Trip> tripList = tripService.findList();
 		return createSuccessResponse(tripList);
 	}
 
-	@RequestMapping(value = "action/trip/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "trip/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public JsonNode loadTrip(@PathVariable String id) {
+		Trip trip = tripService.loadById(id);
+		return createSuccessResponse(trip);
+	}
+
+	@RequestMapping(value = "trip/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
     public JsonNode deleteTrip(@PathVariable String id) {
         tripService.delete(id);
 		return createSuccessResponse();
 	}
 
-	@RequestMapping(value = "action/trip", method = RequestMethod.PUT)
+	@RequestMapping(value = "trip", method = RequestMethod.PUT)
 	@ResponseBody
-    public JsonNode updateTrip(@RequestBody Trip trip) {
-        tripService.update(trip);
+	public JsonNode updateTrip(@RequestBody Trip trip) {
+		Map<String, String> errors = TripValidator.validate(trip);
+		if (errors.isEmpty()) {
+			tripService.update(trip);
+			return createSuccessResponse();
+		} else {
+			return createFailResponse(errors);
+		}
+	}
+
+	@RequestMapping(value = "trip/{id}/members", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonNode loadTripMembers(@PathVariable String id) {
+        List<String> names = tripService.loadTripMemberNames(id);
+        return createSuccessResponse(names);
+    }
+
+	@RequestMapping(value = "trip/{id}/member/{userId}", method = RequestMethod.PUT)
+	@ResponseBody
+	public JsonNode addTripMember(@PathVariable String id, @PathVariable String userId) {
+		tripService.addTripMember(id, userId);
 		return createSuccessResponse();
 	}
 }

@@ -1,5 +1,7 @@
 package ua.home.trip.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -7,8 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import ua.home.trip.api.repository.IEventRepository;
 import ua.home.trip.data.Event;
-
-import java.util.List;
 
 @Repository
 public class EventRepository extends AbstractRepository<Event> implements IEventRepository {
@@ -24,5 +24,10 @@ public class EventRepository extends AbstractRepository<Event> implements IEvent
     public void update(Event entity) {
         throw new UnsupportedOperationException();
     }
+
+	@Override
+	public Class<Event> getEntityClass() {
+		return Event.class;
+	}
 
 }

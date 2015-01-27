@@ -1,8 +1,8 @@
 package ua.home.trip.data;
 
-import ua.home.trip.enums.ELinkType;
-
 import java.util.Date;
+
+import ua.home.trip.enums.ELinkType;
 
 public class Link {
 
@@ -16,6 +16,15 @@ public class Link {
     private String location;
 	private Date createDate;
 	private String createUser;
+	private boolean planned;
+
+	public boolean isPlanned() {
+		return planned;
+	}
+
+	public void setPlanned(boolean planned) {
+		this.planned = planned;
+	}
 
 	public String getLinkId() {
 		return linkId;

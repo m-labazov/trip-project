@@ -1,10 +1,10 @@
 package ua.home.trip.data;
 
+import java.util.Collection;
+
 import org.springframework.security.core.GrantedAuthority;
 
 import ua.home.trip.api.data.IUser;
-
-import java.util.Collection;
 
 public class User extends Identifier implements IUser {
 
@@ -67,7 +67,7 @@ public class User extends Identifier implements IUser {
 
     @Override
     public String getUserId() {
-        return email;
+		return getId();
     }
 
     /**
@@ -132,9 +132,7 @@ public class User extends Identifier implements IUser {
         return null;
     }
 
-    /**
-     * @return the providerId
-     */
+    @Override
     public String getProviderId() {
         return providerId;
     }
@@ -149,6 +147,7 @@ public class User extends Identifier implements IUser {
     /**
      * @return the providerUserId
      */
+    @Override
     public String getProviderUserId() {
         return providerUserId;
     }

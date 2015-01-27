@@ -32,4 +32,8 @@ public interface IUser extends UserDetails, SocialUserDetails, IIdentifable {
 
     void setAuthorities(Collection<GrantedAuthority> authorities);
 
+    String getProviderId();
+
+    String getProviderUserId();
+
 }

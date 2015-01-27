@@ -1,6 +1,6 @@
 package ua.home.trip.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.home.trip.api.service.IEventService;
 import ua.home.trip.data.Event;
 
-import java.util.List;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Controller
 public class EventController extends BaseController {
@@ -21,7 +21,7 @@ public class EventController extends BaseController {
     @Autowired
     private IEventService eventService;
 
-    @RequestMapping(value = "action/event/{tripId}", method = RequestMethod.PUT)
+	@RequestMapping(value = "event/{tripId}", method = RequestMethod.PUT)
     @ResponseBody
     public JsonNode saveLink(@RequestBody Event event, @PathVariable("tripId") String tripId) {
         event.setTripId(tripId);
@@ -29,7 +29,7 @@ public class EventController extends BaseController {
         return createSuccessResponse();
     }
 
-    @RequestMapping(value = "action/event/{tripId}", method = RequestMethod.GET)
+	@RequestMapping(value = "event/{tripId}", method = RequestMethod.GET)
     @ResponseBody
     public JsonNode loadEvents(@PathVariable("tripId") String tripId) {
         List<Event> events = eventService.findEvents(tripId);
