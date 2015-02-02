@@ -1,0 +1,8 @@
+mongo.host=ds039421.mongolab.com
+mongo.port=39421
+mongo.user=admin
+mongo.password=Jndtn42
+mongo.db.name=travel_planner
+
+facebook.app.id=591751197638034
+facebook.app.secret=e6b551d5ff075dfcc16519e8016e0084

@@ -45,7 +45,6 @@ function CreateEventTab(link) {
 function EventService() {
 	this.saveEvent = function(row) {
 		var json = createObjectFromRow(row);
-		delete json.linkId;
 		var jsonData = JSON.stringify(json);
 		$.ajax({
 			url : "action/event/" + linksTab.trip.id,

@@ -22,10 +22,19 @@ public class Event extends Identifier {
     private ELinkType type;
     private EventDetails details;
     private String tripId;
+	private String linkId;
 
-    /**
-     * @return the startTime
-     */
+	public String getLinkId() {
+		return linkId;
+	}
+
+	public void setLinkId(String linkId) {
+		this.linkId = linkId;
+	}
+
+	/**
+	 * @return the startTime
+	 */
     public Date getStartTime() {
         return startTime;
     }

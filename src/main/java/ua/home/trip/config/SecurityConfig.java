@@ -41,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 "/login.htm",
                                 "/signup**",
                                 "/action/connect/**",
+                                "/css/**",
                                 "/user/register/**"
                         ).permitAll()
                         //The rest of the our application is protected.

@@ -16,14 +16,14 @@ public class Link {
     private String location;
 	private Date createDate;
 	private String createUser;
-	private boolean planned;
+	private String eventId;
 
-	public boolean isPlanned() {
-		return planned;
+	public String getEventId() {
+		return eventId;
 	}
 
-	public void setPlanned(boolean planned) {
-		this.planned = planned;
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
 	}
 
 	public String getLinkId() {

@@ -174,7 +174,6 @@
 	<div id="trip-timeline" class="trip-timeline">
 		<div id="tripInfo">
 			<div class="trip-control"><h3 id="tripLabel" class="trip-label"></h3></div>
-			<div id="tripAddMember" class="trip-control button">Add Member</div>
 			<div id="tripEdit" class="trip-control button">Edit</div>
 			<div id="tripDelete" class="trip-control button">Delete</div>
 			<div id="tripDescription" class="trip-description"></div>
