@@ -2,6 +2,7 @@ package ua.home.trip.repository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -67,6 +68,9 @@ public class TripRepository extends AbstractRepository<Trip> implements ITripRep
 
         Update update = new Update().set("links.$.name", link.getName()).set("links.$.type", link.getType())
                 .set("links.$.url", link.getUrl()).set("links.$.location", link.getLocation());
+		if (link.getStartTime() != null) {
+			update.set("links.$.startTime", link.getStartTime()).set("links.$.endTime", link.getEndTime());
+		}
         template.updateFirst(query, update, Trip.class);
     }
 
@@ -116,6 +120,24 @@ public class TripRepository extends AbstractRepository<Trip> implements ITripRep
 	@Override
 	public Class<Trip> getEntityClass() {
 		return Trip.class;
+	}
+
+	@Override
+	public List<Link> findEvents(String tripId) {
+		MatchOperation match = Aggregation.match(Criteria.where("id").is(tripId));
+		// Fields fields = Fields.from(Fields.field("links"),
+		// Fields.field("links.startTime", "startTime"));
+		// ProjectionOperation project = Aggregation.project(fields);
+		// UnwindOperation unwind = Aggregation.unwind("links");
+		// SortOperation sort = Aggregation.sort(new
+		// Sort(Sort.DEFAULT_DIRECTION, "startTime"));
+		// ProjectionOperation project2 = Aggregation.project("links");
+		Aggregation aggregation = Aggregation.newAggregation(match);
+		Trip results = template.aggregate(aggregation, Trip.class, Trip.class).getUniqueMappedResult();
+		return results.getLinks().stream()
+				.filter(link -> link.getStartTime() != null)
+				.sorted((link1, link2) -> link1.getStartTime().compareTo(link2.getStartTime()))
+				.collect(Collectors.toList());
 	}
 
 }

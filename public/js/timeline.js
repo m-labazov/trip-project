@@ -1,44 +1,51 @@
 function TimelineTab() {
-	this.events;
-	this.paint = function() {
-		this.events = serviceContext.eventService.loadEvents();
-	};
-	this.hide = function() {
-		$("#trip-timeline").hide();
-	};
-	this.back = function() {
-		this.hide();
-	};
-	$("#event-submit").click(function(){
-	    if($("#linkForm")[0].checkValidity()) {
-	        serviceContext.eventService.saveEvent($("#linkForm"));
-	        viewResolver.redirectToPage(timelineTab);
-	    } else console.log("invalid form");
-	});
-	this.repaintTimelineTable = function() {
-		var container = $("#timelineTable");
-		container.empty();
-		timelineTab.events.forEach(function(event) {
-			var template = $("#eventTemplate").clone(true, true);
-			template.css({visibility:"visible"});
-			applyObjectToRow(event, template);
-			container.append(template);
-		});
-	};
+	this.name = "timeline";
+	this.init = function() {
+		this.events;
+		this.paint = function() {
+			this.events = serviceContext.eventService.loadEvents();
+		};
+		this.hide = function() {
+			$("#trip-timeline").hide();
+		};
+		this.back = function() {
+			this.hide();
+		};
+		this.repaintTimelineTable = function() {
+			var container = $("#timelineTable");
+			container.empty();
+			timelineTab.events.forEach(function(event) {
+				var template = $("#eventTemplate").clone(true, true);
+				template.css({visibility:"visible"});
+				applyObjectToRow(event, template);
+				container.append(template);
+			});
+		};
+	}
 }
 
-function CreateEventTab(link) {
-	this.paint = function() {
-		clearForm($("#linkForm"));
-		if (link) {
-			applyObjectToRow(link, $("#link-create-layer"));
+function CreateEventTab() {
+	this.name = "link-create";
+	this.init = function() {
+		this.paint = function() {
+			clearForm($("#linkForm"));
+			if (this.link) {
+				applyObjectToRow(this.link, $("#link-create-layer"));
+			}
+			$('#link-create-layer').show();
+			$('#link-submit').hide();
+			$('.eventField').show();
 		}
-		$('#link-create-layer').show();
-		$('#link-submit').hide();
-		$('.eventField').show();
-	}
-	this.hide = function() {
-		$("#link-create-layer").hide();
+		this.hide = function() {
+			$("#link-create-layer").hide();
+		};
+		$("#event-submit").click(function(){
+			if($("#linkForm")[0].checkValidity()) {
+				serviceContext.eventService.saveEvent($("#linkForm"));
+				viewResolver.redirectToPage(timelineTab);
+			} else console.log("invalid form");
+		});
+		$(".date-time-field").datetimepicker({format: "d-m-Y H:i"});
 	}
 }
 

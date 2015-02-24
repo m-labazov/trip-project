@@ -49,6 +49,6 @@ public class ApplicationConfig extends AbstractAnnotationConfigDispatcherServlet
 
     @Override
     protected String[] getServletMappings() {
-		return new String[] { "/action/*", "*.htm", "/trip/*" };
+		return new String[] { "/action/*", "*.htm", "/trip/*", "/display/*" };
     }
 }

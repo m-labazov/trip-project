@@ -4,6 +4,8 @@ import java.util.Date;
 
 import ua.home.trip.enums.ELinkType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Link {
 
 	private String linkId;
@@ -16,14 +18,25 @@ public class Link {
     private String location;
 	private Date createDate;
 	private String createUser;
-	private String eventId;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
+	private Date startTime;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
+	private Date endTime;
 
-	public String getEventId() {
-		return eventId;
+	public Date getStartTime() {
+		return startTime;
 	}
 
-	public void setEventId(String eventId) {
-		this.eventId = eventId;
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 
 	public String getLinkId() {

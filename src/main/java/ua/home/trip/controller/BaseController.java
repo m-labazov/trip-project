@@ -32,11 +32,11 @@ public class BaseController {
 		return createFailResponse(errors, HttpStatus.BAD_REQUEST);
 	}
 
-	protected JsonNode createFailResponse(Map<String, String> errors, HttpStatus badRequest) {
+	protected JsonNode createFailResponse(Map<String, String> errors, HttpStatus statusCode) {
 		Response response = new Response();
         response.setStatusCode("FAIL");
 		response.setData(errors);
-		response.setHttpStatus(badRequest.toString());
+		response.setHttpStatus(statusCode.toString());
         return mapper.valueToTree(response);
 	}
 }

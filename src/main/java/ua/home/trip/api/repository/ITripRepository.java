@@ -25,4 +25,6 @@ public interface ITripRepository extends IAbstractRepository<Trip> {
 
 	void addMember(String id, String id2);
 
+	List<Link> findEvents(String tripId);
+
 }

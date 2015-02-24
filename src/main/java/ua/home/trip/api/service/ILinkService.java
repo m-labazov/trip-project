@@ -1,10 +1,10 @@
 package ua.home.trip.api.service;
 
+import java.util.List;
+
 import ua.home.trip.data.Link;
 import ua.home.trip.data.Marker;
 import ua.home.trip.data.filter.Filter;
-
-import java.util.List;
 
 public interface ILinkService {
 
@@ -17,5 +17,7 @@ public interface ILinkService {
     void addMarkerToLink(String tripId, String linkId, Marker marker);
 
     List<Link> findLinks(Filter filter);
+
+	List<Link> findEvents(String tripId);
 
 }

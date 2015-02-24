@@ -97,4 +97,9 @@ public class TripService extends AbstractService<Trip, ITripRepository> implemen
 		return result;
 	}
 
+	@Override
+	public List<Link> findEvents(String tripId) {
+		return getRepository().findEvents(tripId);
+	}
+
 }

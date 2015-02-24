@@ -8,6 +8,8 @@ function SerciceContext () {
 var serviceContext;
 var tripsTab;
 var linksTab;
+var createLinkTab;
+var createEventTab;
 var menuTab;
 var timelineTab;
 var membersTab;
@@ -20,6 +22,8 @@ $(document).ready(function() {
 	menuTab = new MenuTab();
 	membersTab = new MemberTab();
 	timelineTab = new TimelineTab();
+	createLinkTab = new CreateLinkTab();
+	createEventTab = new CreateEventTab();
 	
 	if ($("#initParams #startTab").html() === "trip") {
 		var tripId = $("#initParams #id").html();
@@ -35,15 +39,27 @@ $(document).ready(function() {
 	$("#logout-button").click(function() {
 		$("#logoutForm").submit();
 	});
-	$(".date-field").datetimepicker({
-		timepicker:false,
-		format:'d-m-Y' });
-	$(".date-time-field").datetimepicker({format: "d-m-Y H:i"});
 });
 
 function ViewResolver(startTab) {
+	this.loadTab = function(tab) {
+		var section = $("section#" + tab.name);
+		if(section.is(":empty")) {
+			var tabSrc = $.ajax({
+				url: section.attr("src"), 
+				async:false,
+				method: "get"
+			}).responseText;
+			section.append(tabSrc);
+		}
+		if (!tab.initialized) {
+			tab.init();
+			tab.initialized = true;
+		}
+	};
 	this.views = [];
 	this.views.push(startTab);
+	this.loadTab(startTab);
 	startTab.paint();
 	
 	this.rerender = function() {
@@ -51,6 +67,7 @@ function ViewResolver(startTab) {
 	};
 	this.moveTo = function(tab) {
 		this.views[this.views.length-1].hide();
+		this.loadTab(tab);
 		this.views.push(tab);
 		tab.paint();
 	};
@@ -58,13 +75,14 @@ function ViewResolver(startTab) {
 		this.views[this.views.length-1].back();
 		this.views.pop(); 
 		this.views[this.views.length-1].paint();
-	}
+	};
 	this.redirectToPage = function(tab) {
 		this.views[this.views.length-1].hide();
 		this.views = [];
+		this.loadTab(tab);
 		this.views.push(tab);
 		tab.paint();
-	}
+	};
 };
 
 var mapHandler;
