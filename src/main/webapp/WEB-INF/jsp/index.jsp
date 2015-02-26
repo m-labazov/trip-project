@@ -1,3 +1,6 @@
+<%@page import="org.springframework.social.security.SocialAuthenticationToken"%>
+<%@page import="ua.home.trip.api.data.IUser"%>
+
 <html>
 <head>
 <title>Travel planner</title>
@@ -27,6 +30,15 @@
 		<div id="startTab">${tab}</div>
 		<div id="id">${id}</div>
 	</div>
+	<div id="pageHeader" class="page-header">
+		<div id="profileImage" class="profile-image-container"><img src="action/user/profileImage" class="profile-image" /></div>
+		<div id="userFullName" class="user-full-name"><%= ((IUser)((SocialAuthenticationToken)request.getUserPrincipal()).getPrincipal()).getName() %></div>
+		<div class="header-controls">
+			<div id="menu-button" class="button menu-button">Menu</div>
+			<div id="message-button" class="message-button">Messages</div>
+			<div id="logout-button" class="button logout-button"><form method="post" id="logoutForm" action="logout">Logout</form></div>
+		</div>
+	</div>
 	<div id="menu" class="menu">
 		<div id="tripListButton" class="button">All trips</div>
 		<div id="tripDraftButton" class="menu-optional-fields button">Trip information</div>
@@ -38,12 +50,6 @@
 		<div id="goEvent" onclick="search()">Go!</div>
 	</div>
 	<div id="main-layer">
-		<div id="menu-layer" class="menu-layer">
-			<div id="menu-button" class="button">Menu</div>
-			<div id="message-button">Messages</div>
-			<div id="logout-button" class="button"><form method="post" id="logoutForm" action="logout">Logout</form></div>
-		</div>
-		
 		<section id="trip-list" class="container" src="display?tab=trip-list"></section>
 		<section id="trip-create" class="container" src="display?tab=trip-create"></section>
 		<section id="trip-member-add" class="container" src="display?tab=trip-member-add"></section>

@@ -53,4 +53,9 @@ public class UserService implements IUserService {
 		return repository.loadUserBySocialId(providerId, providerUserId);
 	}
 
+	@Override
+	public byte[] getUserProfileImage(String userId) {
+		return repository.getUserProfileImage(userId);
+	}
+
 }

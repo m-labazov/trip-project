@@ -52,8 +52,8 @@ public class UserRepository implements IUserRepository, ConnectionSignUp, Initia
 	public List<IUser> loadContactList(String userId) {
 		IUser loadUserById = loadUserById(userId);
 		ConnectionRepository connectionRepository = userConnectionRepository.createConnectionRepository(userId);
-		Set<IUser> result = new HashSet<>();
 		List<Connection<?>> connections = connectionRepository.findConnections(loadUserById.getProviderId());
+		Set<IUser> result = new HashSet<>();
 		// TODO fix it, when Connection repository is implemented
 		// for (Connection<?> connection : connections) {
 		result.addAll(getFriendUsers((Facebook) connections.get(0).getApi()));
@@ -68,6 +68,14 @@ public class UserRepository implements IUserRepository, ConnectionSignUp, Initia
 			result.add(loadUserBySocialId("facebook", reference.getId()));
 		}
 		return result;
+	}
+
+	@Override
+	public byte[] getUserProfileImage(String userId) {
+		IUser loadUserById = loadUserById(userId);
+		ConnectionRepository connectionRepository = userConnectionRepository.createConnectionRepository(userId);
+		List<Connection<?>> connections = connectionRepository.findConnections(loadUserById.getProviderId());
+		return ((Facebook) connections.get(0).getApi()).userOperations().getUserProfileImage();
 	}
 
 	@Override

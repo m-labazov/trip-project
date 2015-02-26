@@ -1,8 +1,12 @@
 package ua.home.trip.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +38,16 @@ public class UserController extends BaseController {
 		List<IUser> contactList = userService.loadContactList();
 		List<IUser> newMembersList = tripService.loadNewMembers(tripId, contactList);
 		return createSuccessResponse(newMembersList);
+	}
+
+	@RequestMapping(value = "user/profileImage", method = RequestMethod.GET)
+	public void getUserProfileImage(HttpServletResponse response) {
+		try {
+			IUser user = (IUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			response.getOutputStream().write(userService.getUserProfileImage(user.getId()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

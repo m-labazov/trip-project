@@ -16,4 +16,6 @@ public interface IUserRepository {
 
 	IUser loadUserBySocialId(String providerId, String userId);
 
+	byte[] getUserProfileImage(String userId);
+
 }

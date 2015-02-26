@@ -15,4 +15,6 @@ public interface IUserService extends UserDetailsService {
 
 	IUser loadUserBySocialId(String providerId, String providerUserId);
 
+	byte[] getUserProfileImage(String userId);
+
 }

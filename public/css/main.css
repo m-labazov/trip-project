@@ -74,11 +74,6 @@ label {
 .trip-control {
 	display:inline-block;
 }
-.menu-layer {
-	position:fixed;
-	left:13%;	
-	height:100%;
-}
 .menu {
 	position:absolute;
 	display: none;
@@ -128,4 +123,38 @@ label {
 }
 .menu-optional-fields {
 	display:none;
+}
+.page-header {
+	position: relative;
+	margin: auto;
+	top: 10px;
+	width: 60%;
+	background-color: grey;
+	height: 50px;
+}
+.profile-image {
+	margin: auto;
+	display: block;
+	max-height: 100%;
+	max-width: 100%;
+}
+.profile-image-container {
+	height: 40px;
+	margin: 5px;
+	display: inline-block;
+	vertical-align: middle;
+}
+.message-button, .logout-button, .menu-button, .user-full-name {
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+	text-align: center;
+	line-height: 50px;
+}
+.header-controls {
+	float: right;
+	margin-right: 5px;
+}
+.trip-label {
+	text-align: center;
 }

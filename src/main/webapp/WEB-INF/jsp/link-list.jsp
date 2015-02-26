@@ -7,8 +7,7 @@
 </script>
 <div id="links-layer" hidden="true">
 	<div id="tripInfo">
-		<div class="trip-control"><h3 id="tripLabel" class="trip-label"></h3></div>
-		<p/>
+		<div><h3 id="tripLabel" class="trip-label"></h3></div>
 		<div id="addLinkButton" class="trip-control button">New Link</div>
 		<div id="tripAddMember" class="trip-control button">Add Member</div>
 		<div id="tripEdit" class="trip-control button">Edit</div>
