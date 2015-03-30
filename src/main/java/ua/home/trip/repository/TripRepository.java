@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import ua.home.trip.api.data.ITrip;
 import ua.home.trip.api.repository.ITripRepository;
 import ua.home.trip.data.Link;
 import ua.home.trip.data.Marker;
@@ -22,7 +23,7 @@ import ua.home.trip.data.Trip;
 import ua.home.trip.data.filter.Filter;
 
 @Repository
-public class TripRepository extends AbstractRepository<Trip> implements ITripRepository {
+public class TripRepository extends AbstractRepository<ITrip> implements ITripRepository {
 
     private static Logger LOGGER = Logger.getLogger(TripRepository.class);
 
@@ -92,7 +93,7 @@ public class TripRepository extends AbstractRepository<Trip> implements ITripRep
 	}
 
     @Override
-    public void update(Trip trip) {
+	public void update(ITrip trip) {
         Query query = Query.query(Criteria.where("id").is(trip.getId()));
         Update update = new Update();
         if (StringUtils.isNotBlank(trip.getName())) {
@@ -108,7 +109,7 @@ public class TripRepository extends AbstractRepository<Trip> implements ITripRep
     }
 
     @Override
-    public List<Trip> findList(String creator) {
+	public List<? extends ITrip> findList(String creator) {
         ProjectionOperation projection = Aggregation.project("id", "name", "startDate", "endDate", "comment",
                 "creator", "members");
         UnwindOperation unwind = Aggregation.unwind("members");
@@ -138,6 +139,14 @@ public class TripRepository extends AbstractRepository<Trip> implements ITripRep
 				.filter(link -> link.getStartTime() != null)
 				.sorted((link1, link2) -> link1.getStartTime().compareTo(link2.getStartTime()))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public void expelMember(String tripId, String userId) {
+		Query query = Query.query(Criteria.where("id").is(tripId));
+
+		Update update = new Update().pull("members", userId);
+		template.updateFirst(query, update, Trip.class);
 	}
 
 }

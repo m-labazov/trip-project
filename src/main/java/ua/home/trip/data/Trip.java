@@ -1,12 +1,15 @@
 package ua.home.trip.data;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Trip extends Identifier {
+import ua.home.trip.api.data.ILocation;
+import ua.home.trip.api.data.ITrip;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+public class Trip extends Identifier implements ITrip {
 
 	private ArrayList<Link> links = new ArrayList<>();
     private List<Event> timeline = new ArrayList<>();
@@ -18,6 +21,17 @@ public class Trip extends Identifier {
 	private String name;
     private String creator;
     private List<String> members = new ArrayList<>();
+	private List<ILocation> locations = new ArrayList<>();
+
+	@Override
+	public List<ILocation> getLocations() {
+		return locations;
+	}
+
+	@Override
+	public void setLocations(List<ILocation> locations) {
+		this.locations = locations;
+	}
 
 	public Date getStartDate() {
 		return startDate;

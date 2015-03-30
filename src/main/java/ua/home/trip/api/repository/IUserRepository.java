@@ -1,4 +1,4 @@
-package ua.home.trip.api.service;
+package ua.home.trip.api.repository;
 
 import java.util.List;
 

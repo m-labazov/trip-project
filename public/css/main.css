@@ -158,3 +158,6 @@ label {
 .trip-label {
 	text-align: center;
 }
+table {
+	empty-cells: show;
+}

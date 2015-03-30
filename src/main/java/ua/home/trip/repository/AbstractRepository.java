@@ -29,6 +29,6 @@ public abstract class AbstractRepository<T> implements IAbstractRepository<T> {
 		return template.findOne(query, getEntityClass());
 	}
 
-	public abstract Class<T> getEntityClass();
+	public abstract Class<? extends T> getEntityClass();
 
 }

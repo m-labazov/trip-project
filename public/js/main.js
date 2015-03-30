@@ -3,33 +3,48 @@ function SerciceContext () {
 	this.linkService = new LinkService();
 	this.mapService = new MapService();
 	this.eventService = new EventService();
+	this.locationService = new LocationService();
+	this.informationService = new InformationService();
 }
 
 var serviceContext;
+var viewResolver;
+
+// Tab handlers
 var tripsTab;
 var linksTab;
 var createLinkTab;
 var createEventTab;
 var menuTab;
 var timelineTab;
-var membersTab;
-var viewResolver;
+var addMembersTab;
+var tripMembersTab;
+var tripMembersTab;
+var locationTab;
+var locationCreateTab;
+var informationTab;
+var informationCreateTab;
 
 $(document).ready(function() {
 	serviceContext = new SerciceContext();
 	tripsTab = new TripsTab();
 	linksTab = new LinksTab();
 	menuTab = new MenuTab();
-	membersTab = new MemberTab();
+	addMembersTab = new AddMemberTab();
+	tripMembersTab = new TripMembersTab();
 	timelineTab = new TimelineTab();
 	createLinkTab = new CreateLinkTab();
 	createEventTab = new CreateEventTab();
+	locationCreateTab = new LocationCreateTab();
+	locationTab = new LocationTab();
+	informationCreateTab = new InformationCreateTab();
+	informationTab = new InformationTab();
 	
 	if ($("#initParams #startTab").html() === "trip") {
 		var tripId = $("#initParams #id").html();
 		serviceContext.tripService.loadTrip(tripId, function(trip) {
-			linksTab.trip = trip;
-			viewResolver = new ViewResolver(linksTab);
+			locationTab.trip = trip;
+			viewResolver = new ViewResolver(locationTab);
 		});
 	} else if($("#initParams #startTab").html() === "tripList") {
 		viewResolver = new ViewResolver(tripsTab);

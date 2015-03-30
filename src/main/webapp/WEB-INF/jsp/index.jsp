@@ -23,6 +23,9 @@
 <script type="text/javascript" src="js/common-functions.js"></script>
 <script type="text/javascript" src="js/menu.js"></script>
 <script type="text/javascript" src="js/timeline.js"></script>
+<script type="text/javascript" src="js/trip-members.js"></script>
+<script type="text/javascript" src="js/location.js"></script>
+<script type="text/javascript" src="js/information.js"></script>
 </head>
 <body>
 
@@ -53,10 +56,14 @@
 		<section id="trip-list" class="container" src="display?tab=trip-list"></section>
 		<section id="trip-create" class="container" src="display?tab=trip-create"></section>
 		<section id="trip-member-add" class="container" src="display?tab=trip-member-add"></section>
+		<section id="trip-members" class="container" src="display?tab=trip-members"></section>
 		<section id="link-list" class="container" src="display?tab=link-list"></section>
 		<section id="link-create" class="container" src="display?tab=link-create"></section>
 		<section id="timeline" class="container" src="display?tab=timeline"></section>
-		
+		<section id="location-create" class="container" src="display?tab=location-create"></section>
+		<section id="location-list" class="container" src="display?tab=location-list"></section>
+		<section id="information-create" class="container" src="display?tab=information-create"></section>
+		<section id="information-list" class="container" src="display?tab=information-list"></section>
 	</div>
 </body>
 </html>

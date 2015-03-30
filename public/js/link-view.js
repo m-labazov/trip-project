@@ -41,12 +41,12 @@ function LinksTab() {
 			            { "data": "name" },
 			            { "data": "location" },
 			            { "data": "type" },
-			            { "data": "url" },
+			            { "data": "url" }
 			            ],
 			            "columnDefs": [
 			                           {
 			                        	   "render" : function(data, type, row) {
-			                        		   return "<a href='" + row.url + "'>Link</a>";
+			                        		   return row.url ? "<a href='" + row.url + "'>Link</a>" : null;
 			                        	   },
 			                        	   "targets" : 4
 			                           }, {
@@ -84,7 +84,6 @@ function LinksTab() {
 			$("#tripDescription").append(linksTab.trip.comment);
 			history.pushState({}, 'Title', 'trip?id='+linksTab.trip.id);
 			menuTab.reloadFields();
-			serviceContext.tripService.loadTripMembers(linksTab.trip.id);
 		};
 		this.back = function() {
 			window.history.back();
@@ -108,10 +107,6 @@ function LinksTab() {
 		$("#tripEdit").click(function() {
 			viewResolver.moveTo(new CreateTripTab(linksTab.trip));
 		});
-		$("#tripAddMember").click(function() {
-			membersTab.trip = linksTab.trip;
-			viewResolver.moveTo(membersTab);
-		});
 		$("#linkDelete").click(function() {
 			serviceContext.linkService.deleteLink($(this).parent().find("#linkId").text());
 		});
@@ -123,11 +118,6 @@ function LinksTab() {
 			createEventTab.link = linksTab.table.row($(this).closest('tr').prev()).data();
 			viewResolver.moveTo(createEventTab);
 		});
-		this.drawMembers = function(members) {
-			var membersContainer = $("#tripMembers");
-			membersContainer.empty();
-			membersContainer.append(members.toString());
-		};
 	}
 }
 
@@ -155,44 +145,6 @@ function CreateLinkTab() {
 			}else console.log("invalid form");
 		});
 		$("#link-cancel-submit").click(function(){
-			viewResolver.goBack();
-		});
-	}
-}
-
-function MemberTab() {
-	this.name = "trip-member-add";
-	this.init = function() {
-		$('#friendTable').dataTable( {
-			"processing": true,
-			"columns": [
-			            { "data": "id" },
-			            { "data": "name" }
-			            ],
-			            "columnDefs": [
-			                           {
-			                        	   "targets" : [ 0 ],
-			                        	   "visible" : false,
-			                        	   "searchable" : false
-			                           } ]
-		} );
-		this.table = $('#friendTable').DataTable();
-		$('#friendTable tbody').on( 'click', 'tr', function () {
-			var member = membersTab.table.row( this ).data();
-			serviceContext.tripService.addTripMember(membersTab.trip.id, member);
-		} );
-		this.paint = function() {
-			membersTab.table.ajax.url("action/loadNewMembersList/" + membersTab.trip.id).load();
-			$('#add-member-layer').show();
-		};
-		this.back = function() {
-			this.hide();
-		};
-		
-		this.hide = function() {
-			$("#add-member-layer").hide();
-		};
-		$("#add-member-cancel-submit").click(function(){
 			viewResolver.goBack();
 		});
 	}

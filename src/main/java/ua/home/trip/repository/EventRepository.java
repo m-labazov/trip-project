@@ -30,4 +30,9 @@ public class EventRepository extends AbstractRepository<Event> implements IEvent
 		return Event.class;
 	}
 
+	@Override
+	public List<? extends Event> findList(String id) {
+		return findEvents(id);
+	}
+
 }

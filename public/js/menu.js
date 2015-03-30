@@ -33,4 +33,8 @@ function MenuTab() {
 		viewResolver.redirectToPage(timelineTab);
 		menuTab.hideMenu();
 	});
+	$("#tripMembersButton").click(function() {
+		viewResolver.redirectToPage(tripMembersTab);
+		menuTab.hideMenu();
+	});
 }

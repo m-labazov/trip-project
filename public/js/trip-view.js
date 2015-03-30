@@ -23,28 +23,27 @@ function TripsTab() {
 				"processing": false,
 				"columns": [
 				            { "data": "id" },
-				            { "data": "name" },
-				            { "data": "startDate" },
-				            { "data": "endDate" }
-				            ],
-				            "columnDefs": [
-				                           {
-				                        	   "targets" : [ 0 ],
-				                        	   "visible" : false,
-				                        	   "searchable" : false
-				                           }, {
-				                        	   "targets" : [ 1 ],
-				                        	   "render" : function(data, type, row) {
-				                        		   return "<div class='button tripCell'>" + data + "</div>";
-				                        	   }
-				                           } ],
-				                           "drawCallback": function() {
-				                        	   $('.tripCell').click( function () {
-				                        		   var trip = tripsTab.table.row( $(this).closest('tr') ).data();
-				                        		   linksTab.trip = trip;
-				                        		   viewResolver.moveTo(linksTab);
-				                        	   } );
-				                           }
+				            { "data": "name" }
+		            ],
+	            "columnDefs": [
+                       {
+                    	   "targets" : [ 0 ],
+                    	   "visible" : false,
+                    	   "searchable" : false
+                       }, {
+                    	   "targets" : [ 1 ],
+                    	   "render" : function(data, type, row) {
+                    		   			return "<div class='button tripCell'>" + data + "</div>";
+                    	   			}
+                       } 
+                   ],
+               "drawCallback": function() {
+            	   $('.tripCell').click( function () {
+            		   var trip = tripsTab.table.row( $(this).closest('tr') ).data();
+            		   viewResolver.moveTo(locationTab);
+            		   locationTab.trip = trip;
+            	   } );
+               }
 			} );
 			this.table = $('#tripTable').DataTable();
 			
@@ -127,23 +126,20 @@ function TripService() {
 			}
 		});
 	};
-	this.loadTripMembers = function(id) {
-		$.ajax({
-			url : "action/trip/" + id + "/members",
-			type : 'get',
-			success : function(data) {
-				linksTab.drawMembers(getResponseBody(data));
-			}
-		});
-	};
 	this.addTripMember = function(id, member) {
 		$.ajax({
 			url : "action/trip/" + id + "/member/" + member.id,
 			type : 'put',
 			success : function(data) {
-				serviceContext.tripService.loadTripMembers(id);
 			    viewResolver.goBack();
 			}
 		});
 	};
+	this.expelMember= function(tripId, userId) {
+		$.ajax({
+			url : "action/trip/" + tripId + "/member/" + userId,
+			async:false,
+			type : 'delete'
+		});
+	}
 }

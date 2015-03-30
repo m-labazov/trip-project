@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import ua.home.trip.api.data.IUser;
-import ua.home.trip.api.service.IUserRepository;
+import ua.home.trip.api.repository.IUserRepository;
 import ua.home.trip.api.service.IUserService;
 
 @Service

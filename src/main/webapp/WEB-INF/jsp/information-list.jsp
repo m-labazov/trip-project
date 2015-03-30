@@ -5,20 +5,19 @@
 		linkTypes["<%=type.name()%>"] = "<%=type.getTitle()%>"; 
 	<%} %>
 </script>
-<div id="links-layer" hidden="true">
+<div id="information-list-layer" hidden="true">
 	<div id="tripInfo">
 		<div><h3 id="tripLabel" class="trip-label"></h3></div>
-		<div id="addLinkButton" class="trip-control button">New Link</div>
+		<div id="addInformationButton" class="trip-control button">Add information</div>
 		<div id="tripEdit" class="trip-control button">Edit</div>
 		<div id="tripDelete" class="trip-control button">Delete</div>
 		<div id="tripDescription" class="trip-description"></div>
 	</div>
-	<table id="linkTable" class="display" cellspacing="0" width="100%">
+	<table id="informationTable" class="display" cellspacing="0" width="100%">
 		<thead>
 			<tr>
 				<th>Id</th>
 				<th>Name</th>
-				<th>Location</th>
 				<th>Type</th>
 				<th>&nbsp;</th>
 			</tr>

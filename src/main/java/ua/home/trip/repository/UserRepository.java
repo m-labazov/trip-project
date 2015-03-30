@@ -25,7 +25,7 @@ import org.springframework.social.facebook.api.Reference;
 import org.springframework.stereotype.Repository;
 
 import ua.home.trip.api.data.IUser;
-import ua.home.trip.api.service.IUserRepository;
+import ua.home.trip.api.repository.IUserRepository;
 import ua.home.trip.data.User;
 import ua.home.trip.util.UserFactory;
 

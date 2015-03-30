@@ -20,7 +20,6 @@ public class Event extends Identifier {
     private String description;
     private String name;
     private ELinkType type;
-    private EventDetails details;
     private String tripId;
 	private String linkId;
 
@@ -100,20 +99,6 @@ public class Event extends Identifier {
      */
     public void setType(ELinkType type) {
         this.type = type;
-    }
-
-    /**
-     * @return the details
-     */
-    public EventDetails getDetails() {
-        return details;
-    }
-
-    /**
-     * @param details the details to set
-     */
-    public void setDetails(EventDetails details) {
-        this.details = details;
     }
 
     /**
